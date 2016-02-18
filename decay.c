@@ -43,12 +43,36 @@ gsl_rng * init_rng()
     return r;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
+    int i;
+    double rnd;
+    double mu;
+
+    if (argc != 5) die("Four arguments are required:\n./decay tau_1 tau_2 alpha number");
+
+    double tau_1 = atof(argv[1]);
+    double tau_2 = atof(argv[2]);
+    double alpha = atof(argv[3]);
+    int num_values = atof(argv[4]);
+
+    if (tau_1 < 0 || tau_2 < 0) die("Lifetime values should be positive.");
+    if (alpha <= 0 || alpha >= 1) die("Alpha must be between 0 and 1.");
+    if (num_values < 1) die("At least 1 value must be required.");
+
     gsl_rng * r = init_rng();
 
-    double i = gsl_ran_exponential(r, 3.0);
-    printf("Value: %f\n", i);
+    for (i = 0; i < num_values; i++) {
+        rnd = gsl_rng_uniform(r);
+        if (rnd < alpha) {
+            mu = tau_1;
+        } else {
+            mu = tau_2;
+        }
+
+        double t = gsl_ran_exponential(r, mu);
+        printf("%f\n", t);
+    }
 
     gsl_rng_free(r);
     return 0;
