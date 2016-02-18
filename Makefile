@@ -1,6 +1,6 @@
-P=decay
+P=sim_decay
 OBJECTS=
-CFLAGS=-I$(HOME)/root/include -g -Wall -O0
+CFLAGS=-I$(HOME)/root/include -g -Wall -O3
 LDFLAGS=-L$(HOME)/root/lib -lgsl -lm
 CC=clang
 
