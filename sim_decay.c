@@ -17,14 +17,17 @@ void die(const char *message)
 
 unsigned long int random_seed()
 {
-    unsigned int seed = 0;
+    unsigned long int seed = 0;
     FILE *urandom;
 
     urandom = fopen("/dev/urandom", "r");
 
     if (urandom) {
-        fread(&seed, sizeof(seed), 1, urandom);
-        fclose(urandom);
+        if (fread(&seed, sizeof(seed), 1, urandom)) {
+                fclose(urandom);
+        } else {
+            die("/dev/urandom could not be read.");
+        }
     } else {
         die("/dev/urandom could not be opened.");
     }
