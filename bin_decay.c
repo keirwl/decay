@@ -70,12 +70,16 @@ int main(int argc, char *argv[])
     while ((line = get_line()) && i < number_values) {
         // printf("Read %i lines\n", i);
         data = atof(line);
+        free(line); // every iteration of loop calls a malloc, thus must be freed here
+
         bin_index = (int)(data/bin_width);
         if (bin_index >= number_bins) continue;
 
         n[bin_index] += 1;
         i++;
     }
+
+    free(line); // upon final get_line(), loop is never ran, thus must be freed here too
 
     for (i = 0; i < number_bins; i++) {
         printf("%g %i\n", t[i], n[i]);
