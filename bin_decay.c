@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <errno.h>
 
+#define INITIAL_LINE_LENGTH (8)
+
 void die(const char *message)
 {
     if (errno) {
@@ -11,6 +13,31 @@ void die(const char *message)
     }
 
     exit(1);
+}
+
+char * get_line(void)
+{
+    char * line;
+    int size; // how much space in line
+    int length; // how many characters in line
+    int c;
+
+    size = INITIAL_LINE_LENGTH;
+    line = malloc(size);
+    if (!line) die("Memory error.");
+    length = 0;
+
+    while ((c = getchar()) != EOF && c != '\n') {
+        if (length >= size-1) {
+            size *= 2;
+            line = realloc(line, size);
+        }
+
+        line[length++] = c;
+    }
+
+    line[length] = '\0';
+    return line;
 }
 
 int main(int argc, char *argv[])
@@ -36,11 +63,11 @@ int main(int argc, char *argv[])
         n[i] = 0;
     }
 
-    char line[16];
+    char *line;
     double data;
     int bin_index;
     i = 0;
-    while (fgets(line, sizeof(line), stdin) && i < number_values) {
+    while ((line = get_line()) && i < number_values) {
         // printf("Read %i lines\n", i);
         data = atof(line);
         bin_index = (int)(data/bin_width);
