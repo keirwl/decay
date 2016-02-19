@@ -23,10 +23,13 @@ int main(int argc, char *argv[])
 
     if (number_bins < 1 || bin_width <= 0) die("Bin number and width must be positive values.");
 
-    double data[number_values];
+    double *data = malloc(sizeof(double)*number_values);
+    if (data == NULL) die("Memory error.");
+
     char line[16];
     int i = 0;
     while (fgets(line, sizeof(line), stdin)) {
+        printf("Read %i line\n", (i+1));
         data[i] = atof(line);
         i++;
     }
@@ -52,5 +55,7 @@ int main(int argc, char *argv[])
     for (i = 0; i < number_bins; i++) {
         printf("%g %i\n", t[i], n[i]);
     }
+
+    free(data);
     return 0;
 }
