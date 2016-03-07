@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     double tau_1 = atof(argv[1]);
     double tau_2 = atof(argv[2]);
     double alpha = atof(argv[3]);
-    int num_values = atof(argv[4]);
+    int num_values = atoi(argv[4]);
 
     if (tau_1 < 0 || tau_2 < 0) die("Lifetime values should be positive.");
     if (alpha <= 0 || alpha >= 1) die("Alpha must be between 0 and 1.");
