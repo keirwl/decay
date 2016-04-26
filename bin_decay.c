@@ -15,38 +15,12 @@ void die(const char *message)
     exit(1);
 }
 
-char * get_line(void)
-{
-    char * line;
-    int size; // how much space in line
-    int length; // how many characters in line
-    int c;
-
-    size = INITIAL_LINE_LENGTH;
-    line = malloc(size);
-    if (!line) die("Memory error.");
-    length = 0;
-
-    while ((c = getchar()) != EOF && c != '\n') {
-        if (length >= size-1) {
-            size *= 2;
-            line = realloc(line, size);
-        }
-
-        line[length++] = c;
-    }
-
-    line[length] = '\0';
-    return line;
-}
-
 int main(int argc, char *argv[])
 {
-    if (argc != 4) die("Three arguments are required:\nbin_decay.app number_bins bin_width number_values");
+    if (argc != 3) die("Two arguments are required:\nbin_decay.app number_bins bin_width");
 
     const int number_bins = atoi(argv[1]);
     const double bin_width = atof(argv[2]);
-    const int number_values = atoi(argv[3]);
 
     if (number_bins < 1 || bin_width <= 0) die("Bin number and width must be positive values.");
 
@@ -63,21 +37,19 @@ int main(int argc, char *argv[])
         n[i] = 0;
     }
 
-    char *line;
     double data;
     int bin_index;
-    i = 0;
-    while ((line = get_line()) && i < number_values) {
-        // printf("Read %i lines\n", i);
+    char *line = NULL;
+    size_t size = 0;
+    ssize_t line_len;
+    while ((line_len = getline(&line, &size, stdin)) != -1) {
         data = atof(line);
-        free(line); // every iteration of loop calls a malloc, thus must be freed here
-
         bin_index = (int)(data/bin_width);
         if (bin_index >= number_bins) continue;
 
         n[bin_index] += 1;
-        i++;
     }
+    free(line);
 
     free(line); // upon final get_line(), loop is never ran, thus must be freed here too
 
