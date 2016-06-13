@@ -51,8 +51,6 @@ int main(int argc, char *argv[])
     }
     free(line);
 
-    free(line); // upon final get_line(), loop is never ran, thus must be freed here too
-
     for (i = 0; i < number_bins; i++) {
         printf("%g %i\n", t[i], n[i]);
     }
